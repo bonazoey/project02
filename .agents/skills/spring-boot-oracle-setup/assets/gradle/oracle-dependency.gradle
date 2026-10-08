@@ -1,0 +1,6 @@
+// 현재 Spring Boot BOM이 관리하는 버전을 먼저 확인한 후 기존 dependencies에 병합한다.
+dependencies {
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+}
+// 관리 버전이 없거나 Java/DB 호환성이 맞지 않으면 공식 호환표로 확인한 버전을 명시한다.
+// H2를 테스트에 계속 쓰는 경우 H2 의존성을 유지하거나 testRuntimeOnly로 조정한다.

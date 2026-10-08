@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mycompany.backendapi.database.dao.BoardDao">
+	<insert id="insert" parameterType="Board">
+		<selectKey keyProperty="bno" resultType="int" order="BEFORE">
+			select board_bno_seq.nextval from dual
+		</selectKey>
+		insert into board
+		(bno, btitle, bcontent, bdate, bwriter, battachoname, battachsname, battachtype, battachdata)
+		values
+		(#{bno}, #{btitle}, #{bcontent}, sysdate, #{bwriter}, 
+		 #{battachoname}, #{battachsname}, #{battachtype}, #{battachdata})
+	</insert>
+	
+	<update id="update" parameterType="Board">
+		update board
+		set btitle=#{btitle}, bcontent=#{bcontent}, bdate=sysdate
+		    <if test="battachoname != null">
+			    ,
+			    battachoname=#{battachoname},
+			    battachsname=#{battachsname},
+			    battachtype=#{battachtype},
+			    battachdata=#{battachdata}
+		    </if>
+		where bno=#{bno}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from board where bno=#{bno}	
+	</delete>
+	
+	<select id="selectByBno" parameterType="int" resultType="Board">
+		select bno, btitle, bcontent, bwriter, bdate, bhitcount,
+		       battachoname, battachsname, battachtype, battachdata
+		from board
+		where bno=#{bno}
+	</select>
+	
+	<select id="countAllRow" resultType="int">
+		select count(*) from board
+	</select>
+	
+	<select id="selectPage" parameterType="Pager" resultType="Board">
+	    <![CDATA[
+	    select * from (
+	        select rownum rnum, bno, btitle, bwriter, bdate, bhitcount
+	        from (
+	            select bno, btitle, bwriter, bdate, bhitcount
+	            from board
+	            order by bno desc
+	        )
+	        where rownum <= #{endRowNo}
+	    )
+	    where rnum >= #{startRowNo}
+	    ]]>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
